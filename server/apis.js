@@ -46,6 +46,15 @@ app.get('/api/transactions/:id', db.getTransactionById)
 //app.put('/api/customers/:id', db.updateCustomer)
 //app.delete('/api/customers/:id', db.deleteCustomer)
 //app.get('/api/customers', db.getCustomers)
+
+
+
+// get details of user on monthly transactions 
+app.get('/api/monthlytransactions/:neededmonth/:id',db.getmonthlyTransactionById)
+
+// get details of user on count of monthly transactions 
+app.get('/api/monthlytransactionscount/:neededmonth/:id',db.getmonthlyTransactioncountById)
+
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
 module.exports=app
