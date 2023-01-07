@@ -3,4 +3,4 @@
 tasks:
   - name: Setup & Build
     before: npm install -g mocha
-    init: cd server && npm install
+    init: cd app && npm install && cd ../server && npm install
