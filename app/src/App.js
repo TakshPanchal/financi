@@ -34,13 +34,14 @@ function App() {
       // Signed in 
       const user = userCredential.user;
       // ...
-      let response = await fetch("https://8000-gitpodsampl-templatesve-1pluvodmdgu.ws-us81.gitpod.io/api/customers",{method:"POST", mode:"no-cors", headers:{'content-type':'application/json'}, body:
-      JSON.stringify({
+      let response = await fetch("https://8000-takshpanchal-financi-sybbhjhrow5.ws-us81.gitpod.io/api/customers",
+      {method:"POST",  headers:{'content-type':'application/json'}, 
+      body: JSON.stringify({
         email:user.email,
         uid:user.uid,
         user_name: state.username
       })})
-      let data = await response.json()
+      let data = await response.json()  
       console.log(data)
 
       console.log(user)
