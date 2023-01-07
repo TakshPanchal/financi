@@ -12,10 +12,10 @@ describe('Testing POSTS/shots endpoint', function () {
         user_id: '829021323578245121',
         merchant_name: 'DMart',
         amount: '500',
-        closing_balance: '1000',
+        closing_balance: '10000',
         tag_id: '1',
         type: '0',
-        date: '01-01-2023',
+        date: '01-05-2023',
         description: 'DMartQRCode',
         reference_number: '123'
       })

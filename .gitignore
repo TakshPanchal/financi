@@ -1,0 +1,7 @@
+env
+temp
+fastapi_env
+data
+.ipynb_checkpoints
+.vscode
+__pycache__
