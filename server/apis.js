@@ -30,10 +30,22 @@ app.get('/', (req, res) => {
 })
 
 app.options('')
+
+// create users and fetch APIs
 app.post('/api/customers',db.createCustomer)
 app.get('/api/customers/:id', db.getCustomerById)
+
+// create tags and fetch APIs
 app.get('/api/tags', db.getAllPublicTags)
+app.get('/api/tags/:id', db.getAllTagsUser)
+app.post('/api/tags/create', db.createPrivateTag)
+
+// create transactions and fetch APIs
+app.post('/api/transactions', db.createTransaction)
+app.get('/api/transactions/:id', db.getTransactionById)
 //app.put('/api/customers/:id', db.updateCustomer)
 //app.delete('/api/customers/:id', db.deleteCustomer)
 //app.get('/api/customers', db.getCustomers)
 app.listen(port, () => console.log(`Listening on port ${port}`))
+
+module.exports=app
