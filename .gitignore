@@ -1,3 +1,4 @@
 env
+fastapi_env
 data
 .ipynb_checkpoints
