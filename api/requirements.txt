@@ -1,0 +1,5 @@
+PyPDF2~=2.0
+pandas
+matplotlib
+seaborn
+camelot-py[base]
