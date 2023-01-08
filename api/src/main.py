@@ -1,24 +1,34 @@
 from fastapi import FastAPI, UploadFile, File
+from xgboost import XGBRegressor
+import io
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
 import camelot
 import uvicorn
+import os
+from dateutil import parser
+
+from fastapi.responses import JSONResponse, StreamingResponse
+
 
 app = FastAPI()
-tempDir = '/workspace/financi/api/temp'
 
+tempDir = '/workspace/financi/api/temp'
+models = '/workspace/financi/api/models'
+
+if not os.path.exists(tempDir):
+        os.makedirs(tempDir)
+
+if not os.path.exists(models):
+        os.makedirs(models)
+        
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-# if __name__=="__main__":
-#     uvicorn.run(app, port=43691, host=)
-
 @app.post("/add-pdf")
 async def add_pdf(file: UploadFile = File(...)):
-    
-    # filePath = tempDir.joinpath(f"{str(datetime.now().timestamp())}.pdf")
     filePath = f"{tempDir}/{str(datetime.now().timestamp())}.pdf"
     with open(filePath, "wb+") as file_object:
         file_object.write(file.file.read())
@@ -54,4 +64,41 @@ async def add_pdf(file: UploadFile = File(...)):
     table_df['Credit'] = pd.to_numeric(table_df['Credit'])
     table_df['Balance'] = pd.to_numeric(table_df['Balance'])
     table_df = table_df.fillna(0)
-    return table_df.to_dict()
+
+    table_df['Value Date'] = table_df['Value Date'].astype(str)
+    table_df['Txn Date'] = table_df['Txn Date'].astype(str)
+    print(len(table_df))
+   
+    stream = io.StringIO()
+    table_df.to_csv(stream, index = False)
+    response = StreamingResponse(iter([stream.getvalue()]),
+                            media_type="text/csv")
+    print(len(table_df))
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    response.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
+
+    # headers = {
+    #     "Access-Control-Allow-Origin" : "*",
+    #     "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept"
+    # }
+    return response
+
+@app.get("/forecast")
+async def forecast(uid, time):
+    model_path = f"{models}/popu.json"
+    model = XGBRegressor()
+    date = parser.parse(time)
+    if os.path.exists(model_path):
+        print("sdasdasd")
+        model.load_model(model_path)
+        prediction = model.predict([[date.year, date.month, int(date.strftime("%V")), date.weekday() + 1, date.day]])
+        print("Pred" , prediction)
+        print("sdasdasd")
+
+        return {'prediction' : str(prediction[0])}
+    
+    return {"uid": str(uid)}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, port=8080, reload=True)
