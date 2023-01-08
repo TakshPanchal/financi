@@ -1,4 +1,4 @@
-# Financi
+![image](https://user-images.githubusercontent.com/24816726/211176272-74271b5c-c3dd-4fd7-acae-206f0e8469e4.png)
 
 Ever wondered where all of your salary went, just yesterday you had your bank account refilled with your monthly salary/allowance and now it seems everything disappeared. 
 Do you also spend and spend and only realize it when the Bank sends an SMS with your bank balance. 
