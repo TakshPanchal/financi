@@ -72,24 +72,52 @@ const createTransaction = (req, res)  => {
     let size = statusCounter(req.body);
 
 
-    let rep = '($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-    size--;
-    if(size>=2){
+    // let rep = '($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    // size--;
+    // if(size>=2){
        
-        while(size--){
-            rep+=',($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-        }
-    }
-    else{
+    //     while(size--){
+    //         rep+=',($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    //     }
+    // }
+    // else{
 
-        if(size==1){
-            rep+=',($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    //     if(size==1){
+    //         rep+=',($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    //     }
+    // }
+    
+    let obj = req.body;
+    size = req.body.length
+    
+    let query = `INSERT INTO transactions (user_id, merchant_name, amount, closing_balance, tag_id, type, date, description, reference_number) VALUES `
+    console.log(size)
+    if(size == 2){
+        for(let i=0;i<2;i++){
+        
+            if(i==1){
+                query = query + `,`;
+            }
+            query = query + `(${obj[i].user_id}, '${obj[i].merchant_name}', ${obj[i].amount}, ${obj[i].closing_balance},${obj[i].tag_id},${obj[i].type},'${obj[i].date}','${obj[i].description}', '${obj[i].reference_number}')`
+    
         }
+
+    }else{
+
+        for(let i=0;i<size;i++){
+        
+
+            if(i>=1 && i < size){
+                query = query+`,`
+            }
+            query = query + `(${obj[i].user_id}, '${obj[i].merchant_name}', ${obj[i].amount}, ${obj[i].closing_balance},${obj[i].tag_id},${obj[i].type},'${obj[i].date}','${obj[i].description}', '${obj[i].reference_number}')`
+    
+        }
+        
     }
-    
-    
-    pool.query(`INSERT INTO transactions (user_id, merchant_name, amount, closing_balance, tag_id, type, date, description, reference_number) VALUES ${rep}`,
-     [user_id, merchant_name, amount, closing_balance, tag_id, type, newdate, description, reference_number], (error, results) => {
+    query = query + ';';
+    console.log(query)
+    pool.query(query,(error, results) => {
         if (error) {
             res.status(404).send('The transaction with the given Merchant and on the particular date was not found.')
             throw error
